@@ -1,81 +1,86 @@
-﻿using System.Data.SqlClient;
+﻿using ApplicationXMLTool.Properties;
+using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Xml;
 
 namespace ApplicationXMLTool
 {
-    public static class Run
+    public class Run
     {
-        public static SqlXml GetXmlData(string connectionString)
+
+        private readonly string _connectionString;
+        private readonly List<string> _policiesIds;
+
+        public Run()
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            _connectionString = Settings.Default.ConnectionString;
+            _policiesIds = Settings.Default.Policies.Split(",").ToList();
+
+        }
+
+        public async Task Execute()
+        {
+            Console.WriteLine("Excecuting...");
+            foreach (var policy in _policiesIds)
+            {
+                SqlXml xml = await GetXmlDataAsync(policy);
+
+                var xmlStr = xml.Value;
+                var splittedXml = xmlStr.Split("<AWT>");
+                var replaceString = splittedXml.FirstOrDefault(s => s.Contains("MultiLineTextTag"));
+                if (replaceString != null)
+                {
+                    xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT>");
+                    await UpdateAsync(xmlStr, policy);
+                    Console.WriteLine($"PolicyID {policy} updated!");
+                }
+            }
+
+        }
+
+        public async Task UpdateAsync(string xml, string policy)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string commandText =
+                    "UPDATE InsurancePolicyHistory SET ApplicationXML = '" + xml + "' WHERE InsurancePolicyID = " + policy;
+
+                SqlCommand updateCommand = new SqlCommand(commandText, connection);
+
+                await updateCommand.ExecuteNonQueryAsync();
+            }
+        }
+
+
+        public async Task<SqlXml> GetXmlDataAsync(string policyId)
+        {
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
                 SqlXml applicationXml = new SqlXml();
 
-                // The query includes two specific customers for simplicity's
-                // sake. A more realistic approach would use a parameter
-                // for the CustomerID criteria. The example selects two rows
-                // in order to demonstrate reading first from one row to
-                // another, then from one node to another within the xml column.
                 string commandText =
                     "SELECT ApplicationXML,VersionID,InsurancePolicyID from InsurancePolicyHistory WHERE " +
-                    "InsurancePolicyID = 1016";
+                    "InsurancePolicyID = " + policyId;
 
                 SqlCommand commandSales = new SqlCommand(commandText, connection);
 
-                SqlDataReader applicationXmlReader = commandSales.ExecuteReader();
+                SqlDataReader applicationXmlReader = await commandSales.ExecuteReaderAsync();
 
                 //  Multiple rows are returned by the SELECT, so each row
-                //  is read and an XmlReader (an xml data type) is set to the
-                //  value of its first (and only) column.
-                int countRow = 1;
-                while (applicationXmlReader.Read())
+                //is read and an XmlReader (an xml data type) is set to the
+                //value of its first(and only) column.
+
+                while (await applicationXmlReader.ReadAsync())
                 //  Must use GetSqlXml here to get a SqlXml type.
                 //  GetValue returns a string instead of SqlXml.
                 {
                     applicationXml = applicationXmlReader.GetSqlXml(0);
-                    XmlReader applicationReaderXml = applicationXml.CreateReader();
-                    Console.WriteLine("-----Row " + countRow + "-----");
 
-                    //  Move to the root.
-                    applicationReaderXml.MoveToContent();
-
-                    //  We know each node type is either Element or Text.
-                    //  All elements within the root are string values.
-                    //  For this simple example, no elements are empty.
-                    while (applicationReaderXml.Read())
-                    {
-                        if (applicationReaderXml.NodeType == XmlNodeType.Text)
-                        {
-
-                            string elementLocalName =
-                            applicationReaderXml.LocalName;
-                        //applicationReaderXml.Read();
-                        Console.WriteLine(elementLocalName + ": " +
-                            applicationReaderXml.Value);
-
-                            if(applicationReaderXml.Value.Contains("MultiLineTextTag"))
-                            {
-                                var test = "";
-                                var attr = applicationReaderXml.GetAttribute("AWS");
-                                var hasAttr = applicationReaderXml.HasAttributes;
-                                var quoteChar = applicationReaderXml.QuoteChar;
-                            }
-                           
-                        }
-                        if (applicationReaderXml.NodeType == XmlNodeType.Element)
-                        {
-                            var test = "";
-                            var attr = applicationReaderXml.GetAttribute("AWS");
-                            var hasAttr = applicationReaderXml.HasAttributes;
-                            var quoteChar = applicationReaderXml.QuoteChar;
-                        }
-
-
-                    }
-                    countRow = countRow + 1;
                 }
 
                 return applicationXml;
