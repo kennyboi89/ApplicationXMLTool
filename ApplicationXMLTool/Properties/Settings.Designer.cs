@@ -36,10 +36,19 @@ namespace ApplicationXMLTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("sdf")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\r\n                385,386\r\n              ")]
         public string Policies {
             get {
                 return ((string)(this["Policies"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UpdateDocuments {
+            get {
+                return ((bool)(this["UpdateDocuments"]));
             }
         }
     }

@@ -1,17 +1,6 @@
-﻿
-using ApplicationXMLTool;
-using ApplicationXMLTool.Properties;
-using System.Data.SqlClient;
-using System.Data.SqlTypes;
-
-
-
+﻿using ApplicationXMLTool;
 
 Run run = new();
 await run.Execute();
 
 Console.WriteLine("Finished");
-
-
-
-
