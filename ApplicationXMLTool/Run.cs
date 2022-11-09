@@ -1,4 +1,5 @@
 ﻿using ApplicationXMLTool.Properties;
+using System;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Xml;
@@ -31,15 +32,45 @@ namespace ApplicationXMLTool
                     var xmlStr = xml.Value;
                     var splittedXml = xmlStr.Split("<AWT>");
                     var replaceString = splittedXml.FirstOrDefault(s => s.Contains("MultiLineTextTag"));
+                    var replaceStringNotes = splittedXml.FirstOrDefault(s => s.Contains("InternalNotesTag"));
+
+
                     if (replaceString != null)
                     {
-                        xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT>");
+                        if (replaceString.Contains("</AnswersDefinition>"))
+                        {
+                            xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
+                        }
+                        else
+                        {
+                            xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT>");
+                        }
+                        
                         await UpdateAsync(xmlStr, policy, version);
-                        Console.WriteLine($"PolicyID {policy} Version: {version}, updated!");
+                        Console.WriteLine($"PolicyID {policy} Version: {version}, updated MultiLineTextTag!");
                     }
                     else
                     {
-                        Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated!");
+                        Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated MultiLineTextTag!");
+                    }
+
+                    if (replaceStringNotes != null)
+                    {
+                        if (replaceStringNotes.Contains("</AnswersDefinition>"))
+                        {
+                            xmlStr = xmlStr.Replace(replaceStringNotes, "<VAL>true</VAL><DVL /><VL /><QT>InternalNotesTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
+                        }
+                        else
+                        {
+                            xmlStr = xmlStr.Replace(replaceStringNotes, "<VAL>true</VAL><DVL /><VL /><QT>InternalNotesTag</QT></AWT>");
+                        }
+
+                        await UpdateAsync(xmlStr, policy, version);
+                        Console.WriteLine($"PolicyID {policy} Version: {version}, updated InternalNotesTag!");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated InternalNotesTag!");
                     }
 
                     version++;
@@ -101,9 +132,14 @@ namespace ApplicationXMLTool
                 string commandText =
                     "UPDATE DocumentProduction set DocumentProductionStatusID = 1 where DocumentID = " + documentId;
 
+                string commandText2 =
+                   "UPDATE DocumentStore_Document SET Deleted = 1 where DocumentID = " + documentId;
+
                 SqlCommand updateCommand = new SqlCommand(commandText, connection);
+                SqlCommand updateCommand2 = new SqlCommand(commandText2, connection);
 
                 await updateCommand.ExecuteNonQueryAsync();
+                await updateCommand2.ExecuteNonQueryAsync();
             }
         }
 
