@@ -12,11 +12,10 @@
     </Setting>
     <Setting Name="Policies" Type="System.String" Scope="Application">
       <Value Profile="(Default)">
-                385,386
               </Value>
     </Setting>
     <Setting Name="UpdateDocuments" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -36,7 +36,7 @@ namespace ApplicationXMLTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\r\n                385,386\r\n              ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Policies {
             get {
                 return ((string)(this["Policies"]));
@@ -45,7 +45,7 @@ namespace ApplicationXMLTool.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool UpdateDocuments {
             get {
                 return ((bool)(this["UpdateDocuments"]));

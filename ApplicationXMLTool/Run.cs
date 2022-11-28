@@ -36,24 +36,24 @@ namespace ApplicationXMLTool
                     var replaceStringNotes = splittedXml.FirstOrDefault(s => s.Contains("NotesTag"));
 
 
-                    if (replaceString != null)
-                    {
-                        if (replaceString.Contains("</AnswersDefinition>"))
-                        {
-                            xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
-                        }
-                        else
-                        {
-                            xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT>");
-                        }
-                        
-                        await UpdateAsync(xmlStr, policy, version);
-                        Console.WriteLine($"PolicyID {policy} Version: {version}, updated MultiLineTextTag!");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated MultiLineTextTag!");
-                    }
+                    //if (replaceString != null)
+                    //{
+                    //    if (replaceString.Contains("</AnswersDefinition>"))
+                    //    {
+                    //        xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
+                    //    }
+                    //    else
+                    //    {
+                    //        xmlStr = xmlStr.Replace(replaceString, "<VAL>true</VAL><DVL /><VL /><QT>MultiLineTextTag</QT></AWT>");
+                    //    }
+
+                    //    await UpdateAsync(xmlStr, policy, version);
+                    //    Console.WriteLine($"PolicyID {policy} Version: {version}, updated MultiLineTextTag!");
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated MultiLineTextTag!");
+                    //}
 
                     if (replaceStringInternalNotes != null)
                     {
