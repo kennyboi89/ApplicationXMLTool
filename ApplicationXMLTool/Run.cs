@@ -32,7 +32,8 @@ namespace ApplicationXMLTool
                     var xmlStr = xml.Value;
                     var splittedXml = xmlStr.Split("<AWT>");
                     var replaceString = splittedXml.FirstOrDefault(s => s.Contains("MultiLineTextTag"));
-                    var replaceStringNotes = splittedXml.FirstOrDefault(s => s.Contains("InternalNotesTag"));
+                    var replaceStringInternalNotes = splittedXml.FirstOrDefault(s => s.Contains("InternalNotesTag"));
+                    var replaceStringNotes = splittedXml.FirstOrDefault(s => s.Contains("NotesTag"));
 
 
                     if (replaceString != null)
@@ -54,15 +55,15 @@ namespace ApplicationXMLTool
                         Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated MultiLineTextTag!");
                     }
 
-                    if (replaceStringNotes != null)
+                    if (replaceStringInternalNotes != null)
                     {
-                        if (replaceStringNotes.Contains("</AnswersDefinition>"))
+                        if (replaceStringInternalNotes.Contains("</AnswersDefinition>"))
                         {
-                            xmlStr = xmlStr.Replace(replaceStringNotes, "<VAL>true</VAL><DVL /><VL /><QT>InternalNotesTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
+                            xmlStr = xmlStr.Replace(replaceStringInternalNotes, "<VAL>true</VAL><DVL /><VL /><QT>InternalNotesTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
                         }
                         else
                         {
-                            xmlStr = xmlStr.Replace(replaceStringNotes, "<VAL>true</VAL><DVL /><VL /><QT>InternalNotesTag</QT></AWT>");
+                            xmlStr = xmlStr.Replace(replaceStringInternalNotes, "<VAL>true</VAL><DVL /><VL /><QT>InternalNotesTag</QT></AWT>");
                         }
 
                         await UpdateAsync(xmlStr, policy, version);
@@ -71,6 +72,25 @@ namespace ApplicationXMLTool
                     else
                     {
                         Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated InternalNotesTag!");
+                    }
+
+                    if (replaceStringNotes != null)
+                    {
+                        if (replaceStringNotes.Contains("</AnswersDefinition>"))
+                        {
+                            xmlStr = xmlStr.Replace(replaceStringNotes, "<VAL>true</VAL><DVL /><VL /><QT>NotesTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
+                        }
+                        else
+                        {
+                            xmlStr = xmlStr.Replace(replaceStringNotes, "<VAL>true</VAL><DVL /><VL /><QT>NotesTag</QT></AWT>");
+                        }
+
+                        await UpdateAsync(xmlStr, policy, version);
+                        Console.WriteLine($"PolicyID {policy} Version: {version}, updated NotesTag!");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"PolicyID {policy} Version: {version}, NOT updated NotesTag!");
                     }
 
                     version++;
