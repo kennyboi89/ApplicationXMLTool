@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 
 
-public class CustomerProcessor
+public partial class CustomerProcessor
 {
     private readonly int _batchSize = 1000;
     private readonly string _connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=DV_UrzusNO_Main_Agency;Persist Security Info=True;User ID=sa;Password=Sql2005$";

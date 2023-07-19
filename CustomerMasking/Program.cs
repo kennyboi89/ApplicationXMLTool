@@ -11,6 +11,8 @@
 
 
 Console.WriteLine(logo);
+Console.WriteLine();
+Console.WriteLine();
 Console.WriteLine("Booting up...");
 
 /*
