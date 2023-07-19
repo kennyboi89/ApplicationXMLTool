@@ -1,8 +1,6 @@
 ﻿using ApplicationXMLTool.Properties;
-using System;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
-using System.Xml;
 
 namespace ApplicationXMLTool
 {
