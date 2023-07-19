@@ -1,8 +1,17 @@
-﻿
+﻿var logo = """
 
-private readonly int _batchSize = 1000;
-private readonly string _connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=DV_UrzusNO_Main_Agency;Persist Security Info=True;User ID=sa;Password=Sql2005$";
-private readonly string tableName = "TempCustomerRecordsForProfileMasking";
+
+   _____          _                              __  __           _             
+  / ____|        | |                            |  \/  |         | |            
+ | |    _   _ ___| |_ ___  _ __ ___   ___ _ __  | \  / | __ _ ___| | _____ _ __ 
+ | |   | | | / __| __/ _ \| '_ ` _ \ / _ \ '__| | |\/| |/ _` / __| |/ / _ \ '__|
+ | |___| |_| \__ \ || (_) | | | | | |  __/ |    | |  | | (_| \__ \   <  __/ |   
+  \_____\__,_|___/\__\___/|_| |_| |_|\___|_|    |_|  |_|\__,_|___/_|\_\___|_|   
+""";
+
+
+Console.WriteLine(logo);
+Console.WriteLine("Booting up...");
 
 /*
  
@@ -34,7 +43,4 @@ private readonly string tableName = "TempCustomerRecordsForProfileMasking";
 
 */
 
-
-
-
-Console.WriteLine("Hello, World!");
+var prosessor = new CustomerProcessor();
