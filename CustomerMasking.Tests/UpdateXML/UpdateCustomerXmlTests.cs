@@ -29,18 +29,14 @@
         [Fact]
         public void TestCustomerXMLTests()
         {
-
             // arrange 
             customer.CustomerApplicationXML = CustomerXMLString.GetTestXML();
-
             var customerProsessing = new CustomerProcessor();
             
             // act
-
             customerProsessing.UpdateCustomerXML(customer);
 
             // assert
-
             Assert.True(true);
 
         }
@@ -54,11 +50,9 @@
             var customerProsessing = new CustomerProcessor();
 
             // act
-
             var result = customerProsessing.MarkAsProcessed(customer);
 
             // assert
-
             Assert.Equal(customer.UserID, result);
 
         }

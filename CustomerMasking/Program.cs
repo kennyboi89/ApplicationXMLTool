@@ -15,6 +15,12 @@ Console.WriteLine();
 Console.WriteLine();
 Console.WriteLine("Booting up...");
 
+var prosessor = new CustomerProcessor();
+prosessor.ProcessNonProcessedCustomers();
+
+Console.WriteLine("Done");
+Console.ReadLine();
+
 /*
  
  * 1. Set the batch size and connection string constants:
@@ -45,5 +51,3 @@ Console.WriteLine("Booting up...");
 
 */
 
-var prosessor = new CustomerProcessor();
-prosessor.ProcessNonProcessedCustomers();
