@@ -4,9 +4,9 @@ using System.Data.SqlClient;
 
 public partial class CustomerProcessor
 {
-    private readonly int _batchSize = 1000;
-    private readonly string _connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=UAT_NO_Agency;Persist Security Info=True;User ID=sa;Password=Sql2005$";
-    private readonly string _tableName = "TempCustomerRecordsForProfileMasking";
+    private readonly int _batchSize = App.Default.BatchSize;
+    private readonly string _connectionString = App.Default.ConnectionString;
+    private readonly string _tableName = App.Default.TableName;
 
     public async Task ProcessNonProcessedCustomersAsync()
     {
