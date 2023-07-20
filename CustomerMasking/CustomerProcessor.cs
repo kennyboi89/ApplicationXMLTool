@@ -67,7 +67,7 @@ public partial class CustomerProcessor
         return customer;
     }
 
-    private void UpdateCustomerXML(Customer customer)
+    public void UpdateCustomerXML(Customer customer)
     {
         // Perform the necessary operations on the CustomerApplicationXML property of the Customer object to update it accordingly
     }

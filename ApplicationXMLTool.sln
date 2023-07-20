@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationXMLTool", "Appli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerMasking", "CustomerMasking\CustomerMasking.csproj", "{B86A0ADE-5C36-48A6-8B1F-F1D84DFBEB94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerMasking.Tests", "CustomerMasking.Tests\CustomerMasking.Tests.csproj", "{FFA88190-E110-4F47-A131-6C5D1CD5AEEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B86A0ADE-5C36-48A6-8B1F-F1D84DFBEB94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B86A0ADE-5C36-48A6-8B1F-F1D84DFBEB94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B86A0ADE-5C36-48A6-8B1F-F1D84DFBEB94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFA88190-E110-4F47-A131-6C5D1CD5AEEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFA88190-E110-4F47-A131-6C5D1CD5AEEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFA88190-E110-4F47-A131-6C5D1CD5AEEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFA88190-E110-4F47-A131-6C5D1CD5AEEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
