@@ -5,6 +5,7 @@
         public Customer customer { get; set; }
         public UpdateCustomerXmlTests()
         {
+
             customer = new Customer
             {
                 UserID = 1,
@@ -24,8 +25,8 @@
                 ExportedDate = null
             };
 
-        }
 
+        }
         [Fact]
         public void TestCustomerXMLTests()
         {
@@ -34,7 +35,8 @@
             var customerProsessing = new CustomerProcessor();
             
             // act
-            customerProsessing.UpdateCustomerXML(customer);
+
+            customerProsessing.UpdateCustomerXMLAsync(customer);
 
             // assert
             Assert.True(true);
@@ -50,9 +52,11 @@
             var customerProsessing = new CustomerProcessor();
 
             // act
+
             var result = customerProsessing.MarkAsProcessed(customer);
 
             // assert
+
             Assert.Equal(customer.UserID, result);
 
         }
