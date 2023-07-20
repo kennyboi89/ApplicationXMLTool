@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 
 namespace CustomerMasking
 {
@@ -66,5 +67,6 @@ namespace CustomerMasking
             }
         }
 
+        private string TemplateString(string qnaTag, string value) => $"<VAL>true</VAL><DVL><DV> {value} </DV></DVL><VL><V> {value} </V></VL><QT>{qnaTag}</QT></AWT>";
     }
 }

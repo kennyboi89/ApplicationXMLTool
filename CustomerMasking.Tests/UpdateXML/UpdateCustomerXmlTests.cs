@@ -28,21 +28,35 @@
 
         }
         [Fact]
-        public void TestCustomerXMLTests()
+        public async Task TestCustomerXMLTests()
         {
-
             // arrange 
             customer.CustomerApplicationXML = CustomerXMLString.GetTestXML();
-
             var customerProsessing = new CustomerProcessor();
             
             // act
 
-            customerProsessing.UpdateCustomerXMLAsync(customer);
+            await customerProsessing.UpdateCustomerXMLAsync(customer);
+
+            // assert
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void MarkAsProcessedTests()
+        {
+
+            // arrange 
+            customer.UserID = 199;
+            var customerProsessing = new CustomerProcessor();
+
+            // act
+
+            var result = customerProsessing.MarkAsProcessed(customer);
 
             // assert
 
-            Assert.True(true);
+            Assert.Equal(customer.UserID, result);
 
         }
     }
