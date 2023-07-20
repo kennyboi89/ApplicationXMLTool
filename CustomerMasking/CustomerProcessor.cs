@@ -1,12 +1,14 @@
 ﻿
+using CustomerMasking;
 using System.Data;
 using System.Data.SqlClient;
+
 
 
 public partial class CustomerProcessor
 {
     private readonly int _batchSize = 1000;
-    private readonly string _connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=DV_UrzusNO_Main_Agency;Persist Security Info=True;User ID=sa;Password=Sql2005$";
+    private readonly string _connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=UAT_NO_Agency;Persist Security Info=True;User ID=sa;Password=Sql2005$";
     private readonly string _tableName = "TempCustomerRecordsForProfileMasking";
 
     public void ProcessNonProcessedCustomers()
@@ -18,7 +20,7 @@ public partial class CustomerProcessor
         foreach (var customer in customers)
         {
             // Update CustomerXML
-            UpdateCustomerXML(customer);
+            UpdateCustomerXMLAsync(customer);
         }
     }
 
@@ -83,11 +85,14 @@ public partial class CustomerProcessor
         return customer;
     }
 
-    public void UpdateCustomerXML(Customer customer)
+    public async Task UpdateCustomerXMLAsync(Customer customer)
     {
         // Perform the necessary operations on the CustomerApplicationXML property of the Customer object to update it accordingly
-
+        ApplicationXMLHandler handler = new ApplicationXMLHandler(_connectionString);
+        await handler.UpdateCustomerApplicationXMLAsync(customer);
+        
         var userid = MarkAsProcessed(customer);
+        
     }
 
     public int MarkAsProcessed(Customer customerData)
