@@ -28,7 +28,7 @@
 
         }
         [Fact]
-        public void TestCustomerXMLTests()
+        public async Task TestCustomerXMLTests()
         {
             // arrange 
             customer.CustomerApplicationXML = CustomerXMLString.GetTestXML();
@@ -36,11 +36,10 @@
             
             // act
 
-            customerProsessing.UpdateCustomerXMLAsync(customer);
+            await customerProsessing.UpdateCustomerXMLAsync(customer);
 
             // assert
             Assert.True(true);
-
         }
 
         [Fact]

@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 
 namespace CustomerMasking
 {
     public class ApplicationXMLHandler
     {
         private string _connectionString;
+
+        private List<string> qnas = new List<string>
+        {
+            "CustomerAndInsuredPersonFirstNameTag",
+            "CustomerAndInsuredPersonLastNameTag",
+            "AddrLine1Tag",
+            "AddrPostCodeTag",
+            "AddrLine3Tag"
+        };
 
         public ApplicationXMLHandler(string conn)
         {
@@ -14,24 +24,36 @@ namespace CustomerMasking
         internal async Task UpdateCustomerApplicationXMLAsync(Customer customer)
         {
             var splittedXml = customer.CustomerApplicationXML.Split("<AWT>");
-            var replaceStringFirstName = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonFirstNameTag"));
-            var replaceStringLastName = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonLastNameTag"));
-            var replaceStringSSN = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonSocialSecurityTag"));
+            //var replaceStringFirstName = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonFirstNameTag"));
+            //var replaceStringLastName = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonLastNameTag"));
+            //var replaceStringSSN = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonSocialSecurityTag"));
 
-            if (replaceStringFirstName != null)
+
+            foreach (var qnaTagName in qnas)
             {
-                if (replaceStringFirstName.Contains("</AnswersDefinition>"))
-                {
-                    customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(replaceStringFirstName, "<VAL>true</VAL><DVL /><VL /><QT>CustomerAndInsuredPersonFirstNameTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
-                }
-                else
-                {
-                    customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(replaceStringFirstName, "<VAL>true</VAL><DVL><DV>" + customer.FirstName + "</DV></DVL><VL><V>"+ customer.FirstName +"</V></VL><QT>CustomerAndInsuredPersonFirstNameTag</QT></AWT>");
-                }
 
+                var stringToReplace = splittedXml.FirstOrDefault(s => s.Contains(qnaTagName));
+                if (stringToReplace != null)
+                {
+                    if (stringToReplace.Contains("</AnswersDefinition>"))
+                    {
+                        customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(stringToReplace, $"<VAL>true</VAL><DVL /><VL /><QT>{qnaTagName}</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
+                    }
+                    else
+                    {
+                        customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(stringToReplace, TemplateString(customer.FirstName, qnaTagName));
+                    }
+
+
+                }
                 await UpdateAsync(customer.CustomerApplicationXML, customer.PersonID);
-                Console.WriteLine($"Cusotmer {customer.UserID}, updated CustomerAndInsuredPersonFirstNameTag!");
+                Console.WriteLine($"Cusotmer {customer.UserID}, updated {qnaTagName}!");
             }
+                    
+
+                
+                
+            
         }
 
         public async Task UpdateAsync(string xml, int personID)
@@ -49,5 +71,6 @@ namespace CustomerMasking
             }
         }
 
+        private string TemplateString(string qnaTag, string value) => $"<VAL>true</VAL><DVL><DV> {value} </DV></DVL><VL><V> {value} </V></VL><QT>{qnaTag}</QT></AWT>";
     }
 }
