@@ -19,9 +19,6 @@ public partial class CustomerProcessor
         {
             // Update CustomerXML
             UpdateCustomerXML(customer);
-
-            // Mark as processed
-            MarkAsProcessed(customer);
         }
     }
 
