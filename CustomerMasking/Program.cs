@@ -16,7 +16,7 @@ Console.WriteLine();
 Console.WriteLine("Booting up...");
 
 var prosessor = new CustomerProcessor();
-prosessor.ProcessNonProcessedCustomers();
+prosessor.ProcessNonProcessedCustomersAsync();
 
 Console.WriteLine("Done");
 Console.ReadLine();

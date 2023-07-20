@@ -1,9 +1,6 @@
 ﻿
 using CustomerMasking;
-using System.Data;
 using System.Data.SqlClient;
-
-
 
 public partial class CustomerProcessor
 {
@@ -11,7 +8,7 @@ public partial class CustomerProcessor
     private readonly string _connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=UAT_NO_Agency;Persist Security Info=True;User ID=sa;Password=Sql2005$";
     private readonly string _tableName = "TempCustomerRecordsForProfileMasking";
 
-    public void ProcessNonProcessedCustomers()
+    public async Task ProcessNonProcessedCustomersAsync()
     {
         // Connect to SQL and fetch top 1000 non-processed rows
         var customers = FetchNonProcessedCustomers();
@@ -20,7 +17,7 @@ public partial class CustomerProcessor
         foreach (var customer in customers)
         {
             // Update CustomerXML
-            UpdateCustomerXMLAsync(customer);
+            await UpdateCustomerXMLAsync(customer);
         }
     }
 
@@ -62,7 +59,7 @@ public partial class CustomerProcessor
     private Customer MapToCustomerObject(SqlDataReader reader)
     {
         // Map data from DataRow to a Customer object
-        Customer customer = new Customer
+        return new Customer
         {
             PersonID = Convert.ToInt32(reader["PersonID"]),
             SocialSecurity = reader["SocialSecurity"].ToString(),
@@ -81,8 +78,6 @@ public partial class CustomerProcessor
             Exported = Convert.IsDBNull(reader["Exported"]) ? false : Convert.ToBoolean(reader["Exported"]),
             ExportedDate = reader["ExportedDate"] != DBNull.Value ? Convert.ToDateTime(reader["ExportedDate"]) : (DateTime?)null
         };
-
-        return customer;
     }
 
     public async Task UpdateCustomerXMLAsync(Customer customer)
@@ -90,9 +85,8 @@ public partial class CustomerProcessor
         // Perform the necessary operations on the CustomerApplicationXML property of the Customer object to update it accordingly
         ApplicationXMLHandler handler = new ApplicationXMLHandler(_connectionString);
         await handler.UpdateCustomerApplicationXMLAsync(customer);
-        
+
         var userid = MarkAsProcessed(customer);
-        
     }
 
     public int MarkAsProcessed(Customer customerData)

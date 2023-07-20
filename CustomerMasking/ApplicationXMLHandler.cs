@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.Runtime.InteropServices;
+﻿using System.Data.SqlClient;
 
 namespace CustomerMasking
 {
@@ -12,19 +10,20 @@ namespace CustomerMasking
         {
             _connectionString = conn;
         }
+
         internal async Task UpdateCustomerApplicationXMLAsync(Customer customer)
         {
             var data = GetMaskedData(customer);
 
             var splittedXml = customer.CustomerApplicationXML.Split("<AWT>");
 
-            foreach(var d in data)
+            foreach(var qnaTag in data)
             {
-                var replaceString= splittedXml.FirstOrDefault(s => s.Contains(d.Key));
+                var replaceString= splittedXml.FirstOrDefault(s => s.Contains(qnaTag.Key));
 
                 if (replaceString != null)
                 {
-                    customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(replaceString, GetApplicationXMLBlockForReplace(d.Key, d.Value));
+                    customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(replaceString, GetApplicationXMLBlockForReplace(qnaTag.Key, qnaTag.Value));
 
                 }
             }
@@ -33,24 +32,22 @@ namespace CustomerMasking
             Console.WriteLine($"Cusotmer {customer.UserID}, updated!");
         }
 
-        public IDictionary<string, string> GetMaskedData(Customer customer)
+        public Dictionary<string, string> GetMaskedData(Customer customer)
         {
-            IDictionary<string, string> data = new Dictionary<string, string>();
-            data.Add("CustomerAndInsuredPersonFirstNameTag", customer.FirstName);
-            data.Add("CustomerAndInsuredPersonLastNameTag", customer.LastName);
-            data.Add("CustomerAndInsuredPersonSocialSecurityTag", customer.SocialSecurity);
-            data.Add("CustomerAndInsuredPersonDOBTag", customer.DateOfBirth.ToString());
-            data.Add("AddrLine1Tag", customer.Line1);
-            data.Add("AddrLine3Tag", customer.Line3);
-            data.Add("AddrPostCodeTag", customer.Postcode);
-
-            return data;
+            return 
+                new Dictionary<string, string>()
+                {
+                    {"CustomerAndInsuredPersonFirstNameTag", customer.FirstName },
+                    {"CustomerAndInsuredPersonLastNameTag", customer.LastName },
+                    {"CustomerAndInsuredPersonSocialSecurityTag", customer.SocialSecurity },
+                    {"CustomerAndInsuredPersonDOBTag", customer.DateOfBirth.ToString() },
+                    {"AddrLine1Tag", customer.Line1 },  
+                    {"AddrLine3Tag", customer.Line3 },                                     
+                    {"AddrPostCodeTag", customer.Postcode },                                 
+                };
         }
 
-        public string GetApplicationXMLBlockForReplace(string tagName, string maskedValue)
-        {
-            return "<VAL>true</VAL><DVL><DV>" + maskedValue + "</DV></DVL><VL><V>" + maskedValue + "</V></VL><QT>" + tagName + "</QT></AWT>";
-        }
+        public string GetApplicationXMLBlockForReplace(string tagName, string maskedValue) => "<VAL>true</VAL><DVL><DV>" + maskedValue + "</DV></DVL><VL><V>" + maskedValue + "</V></VL><QT>" + tagName + "</QT></AWT>";
 
         public async Task UpdateAsync(string xml, int personID)
         {
@@ -66,7 +63,5 @@ namespace CustomerMasking
                 await updateCommand.ExecuteNonQueryAsync();
             }
         }
-
-        private string TemplateString(string qnaTag, string value) => $"<VAL>true</VAL><DVL><DV> {value} </DV></DVL><VL><V> {value} </V></VL><QT>{qnaTag}</QT></AWT>";
     }
 }
