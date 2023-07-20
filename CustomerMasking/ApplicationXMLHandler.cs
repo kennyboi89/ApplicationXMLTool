@@ -13,25 +13,42 @@ namespace CustomerMasking
         }
         internal async Task UpdateCustomerApplicationXMLAsync(Customer customer)
         {
+            var data = GetMaskedData(customer);
+
             var splittedXml = customer.CustomerApplicationXML.Split("<AWT>");
-            var replaceStringFirstName = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonFirstNameTag"));
-            var replaceStringLastName = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonLastNameTag"));
-            var replaceStringSSN = splittedXml.FirstOrDefault(s => s.Contains("CustomerAndInsuredPersonSocialSecurityTag"));
 
-            if (replaceStringFirstName != null)
+            foreach(var d in data)
             {
-                if (replaceStringFirstName.Contains("</AnswersDefinition>"))
-                {
-                    customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(replaceStringFirstName, "<VAL>true</VAL><DVL /><VL /><QT>CustomerAndInsuredPersonFirstNameTag</QT></AWT></AL></APS></AL></AP></PL></AnswersDefinition>");
-                }
-                else
-                {
-                    customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(replaceStringFirstName, "<VAL>true</VAL><DVL><DV>" + customer.FirstName + "</DV></DVL><VL><V>"+ customer.FirstName +"</V></VL><QT>CustomerAndInsuredPersonFirstNameTag</QT></AWT>");
-                }
+                var replaceString= splittedXml.FirstOrDefault(s => s.Contains(d.Key));
 
-                await UpdateAsync(customer.CustomerApplicationXML, customer.PersonID);
-                Console.WriteLine($"Cusotmer {customer.UserID}, updated CustomerAndInsuredPersonFirstNameTag!");
+                if (replaceString != null)
+                {
+                    customer.CustomerApplicationXML = customer.CustomerApplicationXML.Replace(replaceString, GetApplicationXMLBlockForReplace(d.Key, d.Value));
+
+                }
             }
+
+            await UpdateAsync(customer.CustomerApplicationXML, customer.PersonID);
+            Console.WriteLine($"Cusotmer {customer.UserID}, updated!");
+        }
+
+        public IDictionary<string, string> GetMaskedData(Customer customer)
+        {
+            IDictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("CustomerAndInsuredPersonFirstNameTag", customer.FirstName);
+            data.Add("CustomerAndInsuredPersonLastNameTag", customer.LastName);
+            data.Add("CustomerAndInsuredPersonSocialSecurityTag", customer.SocialSecurity);
+            data.Add("CustomerAndInsuredPersonDOBTag", customer.DateOfBirth.ToString());
+            data.Add("AddrLine1Tag", customer.Line1);
+            data.Add("AddrLine3Tag", customer.Line3);
+            data.Add("AddrPostCodeTag", customer.Postcode);
+
+            return data;
+        }
+
+        public string GetApplicationXMLBlockForReplace(string tagName, string maskedValue)
+        {
+            return "<VAL>true</VAL><DVL><DV>" + maskedValue + "</DV></DVL><VL><V>" + maskedValue + "</V></VL><QT>" + tagName + "</QT></AWT>";
         }
 
         public async Task UpdateAsync(string xml, int personID)
