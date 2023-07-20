@@ -9,6 +9,11 @@
 
         public const string BatchSize = "The Batch Size is";
         public const string SqlExit = "Closing the SQL Connection";
+        
+        
+        public const string CustomerProcessed = "UserID finished processed: ";
+
+
 
 
     }

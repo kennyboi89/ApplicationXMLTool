@@ -25,6 +25,7 @@
             };
 
         }
+
         [Fact]
         public void TestCustomerXMLTests()
         {
@@ -41,6 +42,24 @@
             // assert
 
             Assert.True(true);
+
+        }
+
+        [Fact]
+        public void MarkAsProcessedTests()
+        {
+
+            // arrange 
+            customer.UserID = 199;
+            var customerProsessing = new CustomerProcessor();
+
+            // act
+
+            var result = customerProsessing.MarkAsProcessed(customer);
+
+            // assert
+
+            Assert.Equal(customer.UserID, result);
 
         }
     }

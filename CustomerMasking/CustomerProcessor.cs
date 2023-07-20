@@ -89,24 +89,31 @@ public partial class CustomerProcessor
     public void UpdateCustomerXML(Customer customer)
     {
         // Perform the necessary operations on the CustomerApplicationXML property of the Customer object to update it accordingly
+
+        var userid = MarkAsProcessed(customer);
     }
 
-    private void MarkAsProcessed(Customer customerData)
+    public int MarkAsProcessed(Customer customerData)
     {
-        //using (var connection = new SqlConnection(_connectionString))
-        //{
-        //    connection.Open();
+        using (var connection = new SqlConnection(_connectionString))
+        {
+            connection.Open();
 
-        //    var customerId = customerData["CustomerID"]; // Assuming there's a primary key column named "CustomerID"
-        //    var query = $"UPDATE {_tableName} SET Processed = 1 WHERE CustomerID = @CustomerId";
+            var userId = customerData.UserID; // Assuming there's a primary key column named "CustomerID"
+            var query = $"UPDATE {_tableName} SET Exported = 1, ExportedDate = @Date WHERE UserID = @UserID";
 
-        //    using (var command = new SqlCommand(query, connection))
-        //    {
-        //        command.Parameters.AddWithValue("@CustomerId", customerId);
-        //        command.ExecuteNonQuery();
-        //    }
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Date", DateTime.Now);
+                command.Parameters.AddWithValue("@UserID", userId);
+                command.ExecuteNonQuery();
+            }
 
-        //    connection.Close();
-        //}
+            Console.WriteLine(Constants.CustomerProcessed + userId);
+
+            connection.Close();
+
+            return userId;
+        }
     }
 }
