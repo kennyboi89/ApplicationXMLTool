@@ -46,3 +46,4 @@ Console.WriteLine("Booting up...");
 */
 
 var prosessor = new CustomerProcessor();
+prosessor.ProcessNonProcessedCustomers();

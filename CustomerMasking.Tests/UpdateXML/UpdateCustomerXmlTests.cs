@@ -5,7 +5,6 @@
         public Customer customer { get; set; }
         public UpdateCustomerXmlTests()
         {
-
             customer = new Customer
             {
                 UserID = 1,
@@ -24,7 +23,6 @@
                 Exported = false,
                 ExportedDate = null
             };
-
 
         }
         [Fact]
